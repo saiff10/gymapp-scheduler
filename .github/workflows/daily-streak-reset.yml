@@ -1,11 +1,11 @@
-name: Daily Streak Reset
+nname: Daily Streak Reset
 
 on:
   schedule:
-    # Runs daily at midnight UTC (adjust timezone as needed)
+  
     - cron: '0 0 * * *'
   
-  # Allow manual triggering for testing
+ 
   workflow_dispatch:
 
 jobs:
@@ -16,13 +16,13 @@ jobs:
     - name: Reset Expired Streaks
       run: |
         echo "Calling resetExpiredStreaks function..."
-        https://us-central1-gymapp-74545.cloudfunctions.net/resetExpiredStreaks
+        response=$(curl -s "https://us-central1-gymapp-74545.cloudfunctions.net/resetExpiredStreaks")
         echo "Response: $response"
         
     - name: Reset Daily Flags
       run: |
         echo "Calling resetDailyFlags function..."
-        https://us-central1-gymapp-74545.cloudfunctions.net/resetDailyFlags
+        response=$(curl -s "https://us-central1-gymapp-74545.cloudfunctions.net/resetDailyFlags")
         echo "Response: $response"
         
     - name: Log Completion
