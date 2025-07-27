@@ -1,4 +1,4 @@
-nname: Daily Streak Reset
+name: Daily Streak Reset
 
 on:
   schedule:
