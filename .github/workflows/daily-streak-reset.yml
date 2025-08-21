@@ -1,11 +1,8 @@
 name: Daily Streak Reset
-
 on:
   schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
   
-    - cron: '0 0 * * *'
-  
- 
   workflow_dispatch:
 
 jobs:
@@ -16,15 +13,35 @@ jobs:
     - name: Reset Expired Streaks
       run: |
         echo "Calling resetExpiredStreaks function..."
-        response=$(curl -s "https://us-central1-gymapp-74545.cloudfunctions.net/resetExpiredStreaks")
+        response=$(curl -s -w "\nHTTP Status: %{http_code}" \
+          -H "Content-Type: application/json" \
+          "https://us-central1-gymapp-74545.cloudfunctions.net/resetExpiredStreaks")
         echo "Response: $response"
+        
+        # Check if request was successful
+        if [[ $response == *"HTTP Status: 200"* ]]; then
+          echo "✅ resetExpiredStreaks completed successfully"
+        else
+          echo "❌ resetExpiredStreaks failed"
+          exit 1
+        fi
         
     - name: Reset Daily Flags
       run: |
         echo "Calling resetDailyFlags function..."
-        response=$(curl -s "https://us-central1-gymapp-74545.cloudfunctions.net/resetDailyFlags")
+        response=$(curl -s -w "\nHTTP Status: %{http_code}" \
+          -H "Content-Type: application/json" \
+          "https://us-central1-gymapp-74545.cloudfunctions.net/resetDailyFlags")
         echo "Response: $response"
+        
+        # Check if request was successful
+        if [[ $response == *"HTTP Status: 200"* ]]; then
+          echo "✅ resetDailyFlags completed successfully"
+        else
+          echo "❌ resetDailyFlags failed"
+          exit 1
+        fi
         
     - name: Log Completion
       run: |
-        echo "Daily streak reset completed at $(date)"
+        echo "✅ Daily streak reset completed successfully at $(date)"
